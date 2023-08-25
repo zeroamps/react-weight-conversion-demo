@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Result, Units, convert } from './conversions';
+import { useLocalStorage } from './useLocalStorage';
+import { useState } from 'react';
 
 type Inputs = {
   value: number;
@@ -8,7 +9,8 @@ type Inputs = {
 };
 
 export function Calculator() {
-  const [result, setResult] = useState({ pounds: 0, grams: 0, kilograms: 0, ounces: 0 } as Result);
+  const [inputs, setInputs] = useLocalStorage<Inputs>('inputs', { value: 0, unit: 'kilograms' });
+  const [result, setResult] = useState<Result>(convert(inputs.value, inputs.unit));
 
   const {
     register,
@@ -17,6 +19,7 @@ export function Calculator() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setInputs({ value: data.value, unit: data.unit });
     setResult(convert(data.value, data.unit));
   };
 
@@ -27,7 +30,7 @@ export function Calculator() {
         <form className="flex flex-col justify-center gap-1 sm:flex-row" onSubmit={handleSubmit(onSubmit)}>
           <input
             className={`rounded-lg ${errors.value && 'border-red-900 bg-red-100'}`}
-            defaultValue={0}
+            defaultValue={inputs.value}
             {...register('value', {
               valueAsNumber: true,
               required: true,
@@ -36,7 +39,7 @@ export function Calculator() {
               validate: (value) => value >= 0
             })}
           />
-          <select className="rounded-lg" defaultValue="kilograms" {...register('unit', { required: true })}>
+          <select className="rounded-lg" defaultValue={inputs.unit} {...register('unit', { required: true })}>
             <option value="pounds">pounds</option>
             <option value="grams">grams</option>
             <option value="kilograms">kilograms</option>
