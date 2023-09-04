@@ -3,13 +3,15 @@ import { Result, Units, convert } from './conversions';
 import { useLocalStorage } from './useLocalStorage';
 import { useState } from 'react';
 
+const LOCAL_STORAGE_WEIGHT_KEY = '3ae29b17-7b00-4d04-8bd8-5f69a7480437-weight';
+
 type Inputs = {
   value: number;
   unit: Units;
 };
 
 export function Calculator() {
-  const [inputs, setInputs] = useLocalStorage<Inputs>('inputs', { value: 0, unit: 'kilograms' });
+  const [inputs, setInputs] = useLocalStorage<Inputs>(LOCAL_STORAGE_WEIGHT_KEY, { value: 0, unit: 'kilograms' });
   const [result, setResult] = useState<Result>(convert(inputs.value, inputs.unit));
 
   const {
