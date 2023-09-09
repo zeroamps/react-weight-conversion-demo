@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Result, Units, convert } from './conversions';
-import { useLocalStorage } from './useLocalStorage';
+import { Result, Units, convert } from '../utils/conversions';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useState } from 'react';
 
 const LOCAL_STORAGE_WEIGHT_KEY = '3ae29b17-7b00-4d04-8bd8-5f69a7480437-weight';
